@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennesse</title>
+    <style>
+        body {
+            margin:0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            color:#354140;
+        }
+
+        .container > div {
+            flex: 1;
+        }
+
+        #map {
+            /* position: relative; */
+            height: 50vh;
+            width: 100%;
+            background-color:white;
+        }
+
+        .filters {
+            background-color: #699AC9;
+            padding:10px 8px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding:4px 6px;
+            height: 28px;
+            border-radius: 4px;
+            background-color:#84B8E2;
+            border:none;
+        }
+        
+        .btn:hover {
+            background-color: #1D64AB;
+            color:white;
+        }
+
+        .filter-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap:5px;
+        }
+
+        .filter-body select {
+            width: 100%;
+            line-height: 1;
+            font-size: 1em;
+            border-radius: 4px;
+            color:#333;
+            padding: 4px;
+        }
+        option[value=""][disabled] {
+            display: none;
+        }
+
+        svg g > path {
+            cursor: pointer;
+        }
+
+        #map h2 {
+            text-transform: uppercase;
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 0;
+        }
+
+        #popup {
+            position: absolute;
+            background-color: white;
+            padding: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section-left">
+            <div class="filters">
+                <div class="filter-header">
+                    <h3>Filter by: </h3>
+                    <button class="btn" id="reset-filters">Clear &times; </button>
+                </div>
+
+                <div class="filter-body">
+                    <select name="type" id="type">
+                        <option value="" disabled selected>Type</option>
+                        <option value="All">All</option>
+                        <option value="Certificate program">Certificate program</option>
+                        <option value="Classroom instruction">Classroom instruction</option>
+                        <option value="Clinical research">Clinical research</option>
+                        <option value="Clinical services">Clinical services</option>
+                        <option value="Conferences">Conferences</option> 
+                        <option value="After school activity/instruction">After school activity/instruction</option>
+                        <option value="Community event">Community event</option>
+                        <option value="Civic engagement">Civic engagement</option>
+                        <option value="Community development">Community development</option>
+                        <option value="Community research">Community research</option>
+                        <option value="Online resources">Online resources</option>
+                        <option value="Professional development – teacher">Professional development – teacher</option>
+                        <option value="Professional development – other">Professional development – other</option>
+                        <option value="Professional services">Professional services</option>
+                        <option value="Publications">Publications</option>
+                        <option value="Public lectures">Public lectures</option>
+                        <option value="Service learning">Services learning</option> 
+                        <option value="Volunteer services">Volunteer services</option>
+                    </select>
+                    <select name="county" id="county">
+                        <option value="" disabled selected>County</option>
+                        <option value="All">All</option>
+                        <option value="Robertson" >Robertson</option>
+                        <option value="Sumner" >Sumner</option>
+                        <option value="Macon" >Macon</option>
+                        <option value="Trousdale" >Trousdale</option>
+                        <option value="Smith" >Smith</option>
+                        <option value="Wilson" >Wilson</option>
+                        <option value="Davidson" >Davidson</option>
+                        <option value="Cheatham" >Cheatham</option>
+                        <option value="Dickson" >Dickson</option>
+                        <option value="Hickman" >Hickman</option>
+                        <option value="Williamson" >Williamson</option>
+                        <option value="Rutherford">Rutherford</option>
+                        <option value="Cannon" >Cannon</option>
+                        <option value="Maury" >Maury</option>
+                    </select>
+
+                    <select name="location" id="location">
+                        <option value="" disabled selected>Location</option>
+                        <option value="All">All</option>
+                        <option value="In Tennessee">In Tennesse</option>
+                        <option value="Outside Tennessee">Outside Tennesse</option> 
+                        <option value="Online Resources">Online Resources</option>
+                    </select>
+                    <select name="sponsor" id="sponsor">
+                        <option value="" disabled selected>Sponsor</option>
+                        <option value="All">All</option>
+                        <option value="">[placeholder]</option>
+                        <option value="">[placeholder]</option>
+                        <option value="">[placeholder]</option>
+                    </select>
+                    <select name="audience" id="audience">
+                        <option value="" disabled selected>Audience</option>
+                        <option value="All">All</option>
+                        <option value="Adult learners">Adult learners</option>
+                        <option value="At-risk youth">At-risk youth</option> 
+                        <option value="Children">Children</option>
+                        <option value="Families">Families</option>
+                        <option value="General public">General public</option>
+                        <option value="Government">Government</option>
+                        <option value="Media">Media</option>
+                        <option value="Minority group(s)">Minority group(s)</option>
+                        <option value="Non-profit organizations">Non-profit organizations</option> 
+                        <option value="Rural communities">Rural communities</option>
+                        <option value="Senior citizens">Senior citizens</option>
+                        <option value="Socio-economic disadvantaged">Socio-economic disadvantaged</option>
+                        <option value="Students">Students</option>
+                        <option value="Teachers">Teachers</option>
+                        <option value="Urban communities">Urban communities</option>
+                        <option value="International">International</option>
+                        <option value="Tribal/indigenous">Tribal/indigenous</option>
+                    </select>
+                </div>
+               
+            </div>
+            <div class="map" id="map">
+                <div id="popup"></div>
+                <h2 class="text-center">Program Locator</h2>
+                <svg class="map" id="map-svg" height="300px" width="600px"></svg>
+            </div>
+        </div>
+        <div class="section-right" id="search-reults"></div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4"></script>
+
+    <script src="main.js"></script>
+</body>
+</html>
